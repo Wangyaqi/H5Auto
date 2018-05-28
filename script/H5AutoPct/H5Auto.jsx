@@ -1,7 +1,7 @@
 ﻿function H5Auto() {
 	app.preferences.rulerUnits = Units.PIXELS;
 	var doc = app.activeDocument;
-	//doc.rasterizeAllLayers ();
+	doc.rasterizeAllLayers ();
 	var docpath = doc.path;
 	var docname = doc.name.split(".")[0];
 	var scriptpath = new File($.fileName).parent;
