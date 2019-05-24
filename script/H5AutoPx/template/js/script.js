@@ -8,16 +8,31 @@ var d_width = {{script_d_width}},
 function page_init() {
 	w_width = $(window).width() > d_width ? d_width : $(window).width();
 	w_height = $(window).height() / w_width * d_width;
+	var contain_scale = w_height / w_width > d_height / d_width ? w_width / d_width : w_height / d_height;
+	var cover_scale = w_height / w_width > d_height / d_width ? w_height / d_height : w_width / d_width;
 	$(".page_box").css({
 		"width": d_width + "px",
 		"height": d_height + "px",
 		"top": (w_height - d_height) / 2 + "px"
 	});
+	$(".page_box.fill").css({
+		"width": w_width + "px",
+		"height": w_height + "px",
+		"top": "0px"
+	});
+	$(".page_box.contain").css({
+		"transform-style": "preserve-3d",
+		"-webkit-transform-style": "preserve-3d",
+		"transform": "scale(" + contain_scale + ")",
+		"-webkit-transform": "scale(" + contain_scale + ")"
+	});
+	$(".page_box.cover").css({
+		"transform-style": "preserve-3d",
+		"-webkit-transform-style": "preserve-3d",
+		"transform": "scale(" + cover_scale + ")",
+		"-webkit-transform": "scale(" + cover_scale + ")"
+	});
 }
-
-function page_show(obj) {}
-
-function page_hide(obj) {}
 
 function loader_text() {
 	var total = $("img").length;
@@ -44,25 +59,27 @@ function slideto(nextpage) {
 	}
 	sliding = true;
 	var thispage = current_page;
+	thispage.trigger("beforehide");
+	nextpage.trigger("beforeshow");
 	if(thispage.index() < nextpage.index()) {
 		nextpage.show().css(csswithprefix("transform", "translate(0%, 100%)"));
 		setTimeout(function() {
 			thispage.addClass("page_transition").css(csswithprefix("transform", "translate(0%, -100%)"));
 			nextpage.addClass("page_transition").css(csswithprefix("transform", "translate(0%, 0%)"));
-		}, 100);
+		}, 50);
 
 	} else {
 		nextpage.show().css(csswithprefix("transform", "translate(0%, -100%)"));
 		setTimeout(function() {
 			thispage.addClass("page_transition").css(csswithprefix("transform", "translate(0%, 100%)"));
 			nextpage.addClass("page_transition").css(csswithprefix("transform", "translate(0%, 0%)"));
-		}, 100);
+		}, 50);
 	}
 	setTimeout(function() {
 		thispage.removeClass("page_transition").hide();
 		nextpage.removeClass("page_transition");
-		page_hide(thispage);
-		page_show(nextpage);
+		thispage.trigger("afterhide");
+		nextpage.trigger("aftershow");
 		current_page = nextpage;
 		sliding = false;
 	}, 500);
@@ -75,8 +92,8 @@ $(window).on("load", function() {
 	$(".page_0").fadeOut();
 	var first_page = $(".page_1");
 	first_page.fadeIn();
-	page_show(first_page);
-	page_hide($(".page_0"));
+	first_page.trigger("aftershow");
+	$(".page_0").trigger("afterhide");
 	current_page = first_page;
 });
 

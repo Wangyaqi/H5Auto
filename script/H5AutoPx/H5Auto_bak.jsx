@@ -1,7 +1,6 @@
 ﻿function H5Auto() {
 	app.preferences.rulerUnits = Units.PIXELS;
 	var doc = app.activeDocument;
-	doc.rasterizeAllLayers ();
 	var docpath = doc.path;
 	var docname = doc.name.split(".")[0];
 	var scriptpath = new File($.fileName).parent;
@@ -15,9 +14,6 @@
 	var template = new Folder(templatepath);
 	copyFiles(template, outputpath, '');
 
-	//根元素字体大小
-	var rootsize = 100;
-
 	//script.js模版处理
 	var scriptfile = new File(outputpath + "/js/script.js");
 	var scriptread = "";
@@ -27,7 +23,6 @@
 	scriptfile.close();
 	var script_d_width = doc.width.as('px');
 	var script_d_height = doc.height.as('px');
-	scriptread = scriptread.replace(/{{rootsize}}/g, rootsize.toString());
 	scriptread = scriptread.replace(/{{script_d_width}}/g, script_d_width.toString());
 	scriptread = scriptread.replace(/{{script_d_height}}/g, script_d_height.toString());
 	scriptfile.open("w");
@@ -39,6 +34,7 @@
 	var index_page_template = '<div class="page {{index_page_no}}" id="{{index_page_no}}">\n<div class="page_box">\n{{index_page_main}}</div>\n{{index_page_down}}</div>';
 	var index_page_down = '<img class="page_down" src="img/down.png" />\n';
 	var index_img_template = '<img class="{{index_img_class}}" src="img/{{index_img_name}}.png" />\n';
+	var index_text_template = '<div class="{{index_text_class}}"><p>{{index_text_contents}}</p></div>';
 	var img_group_template = '<div>{{img}}</div>';
 	var page_main_content = "";
 	var page_length = doc.layerSets.length;
@@ -46,6 +42,7 @@
 
 	//style.css模版处理
 	var style_ele_block = '.{{style_ele_name}} {position: absolute;width: {{style_ele_width}};height: auto;left: {{style_ele_left}};top: {{style_ele_top}};}';
+	var style_text_block = '.{{style_text_name}} {position: absolute;width: {{style_text_width}};height: {{style_text_height}};left: {{style_text_left}};top: {{style_text_top}};line-height: {{style_text_lineheight}};font-size: {{style_text_fontsize}};text-indent: {{style_text_textindent}};color: {{style_text_color}};}';
 	var style_content_main = "";
 	var style_page_bg = "";
 	var page_with_bg = '.{{index_page_no}} {background-image: url(../img/{{page_bg}}.jpg);}';
@@ -60,6 +57,7 @@
 	htmlfile.encoding = 'utf-8';
 	htmlread = htmlfile.read();
 	htmlfile.close();
+	htmlread = htmlread.replace(/{{page_width}}/g, script_d_width);
 	htmlread = htmlread.replace(/{{page_title}}/g, docname);
 	htmlread = htmlread.replace(/{{page_main_content}}/g, page_main_content);
 	htmlfile.open("w");
@@ -74,8 +72,9 @@
 	cssfile.encoding = 'utf-8';
 	cssread = cssfile.read();
 	cssfile.close();
-	cssread = cssread.replace(/{{rootfontsize}}/g, (rootsize / script_d_width * 100).toFixed(6).toString());
 	cssread = cssread.replace(/{{style_page_bg}}/g, style_page_bg);
+	cssread = cssread.replace(/{{style_page_width}}/g, script_d_width);
+	cssread = cssread.replace(/{{style_page_halfwidth}}/g, script_d_width / 2);
 	cssread = cssread.replace(/{{style_content_main}}/g, style_content_main);
 	cssfile.open("w");
 	cssfile.encoding = 'utf-8';
@@ -98,22 +97,43 @@
 		var page_img_list = "";
 		for(var k = artLayers.length - 1; k >= 0; k--) {
 			if(artLayers[k].visible) {
+				$.writeln(artLayers[k].name)
+				$.writeln(artLayers[k].kind)
 				if(artLayers[k].name == "bg") {
 					var page_with_bg_temp = page_with_bg.replace(/{{index_page_no}}/g, "page_" + i);
 					page_with_bg_temp = page_with_bg_temp.replace(/{{page_bg}}/g, "bg_" + i);
 					style_content_main += page_with_bg_temp;
 					saveLayer(artLayers[k], "bg_" + i, "bg");
+				} else if(artLayers[k].kind === LayerKind.TEXT) {
+					var text_item = artLayers[k].textItem;
+					var text_temp = index_text_template.replace(/{{index_text_class}}/g, "p_" + i + "_" + k);
+					text_temp = text_temp.replace(/{{index_text_contents}}/g, text_item.contents.replace(/\r/g, "</p><p>"));
+					page_img_list += text_temp;
+					var style_text_block_temp = style_text_block.replace(/{{style_text_name}}/g, "p_" + i + "_" + k);
+					style_text_left = artLayers[k].bounds[0].as('px');
+					style_text_top = artLayers[k].bounds[1].as('px');
+					style_text_width = artLayers[k].bounds[2].as('px') - style_text_left;
+					style_text_height = artLayers[k].bounds[3].as('px') - style_text_top;
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_width}}/g, style_text_width + "px");
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_height}}/g, style_text_height + "px");
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_left}}/g, style_text_left + "px");
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_top}}/g, style_text_top + "px");
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_fontsize}}/g, text_item.size.as('px') + "px");
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_lineheight}}/g, text_item.leading.as('px') + "px");
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_textindent}}/g, text_item.firstLineIndent.as('px') + "px");
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_color}}/g, text_item.color.rgb);
+					style_content_main += style_text_block_temp;
 				} else if(artLayers[k].typename == "ArtLayer") {
 					var img_temp = index_img_template.replace(/{{index_img_class}}/g, "p_" + i + "_" + k);
 					img_temp = img_temp.replace(/{{index_img_name}}/g, "p_" + i + "_" + k);
 					page_img_list += img_temp;
-					var style_ele_block_temp = style_ele_block.replace(/{{style_ele_name}}/g, "p_" + i + "_" + k)
+					var style_ele_block_temp = style_ele_block.replace(/{{style_ele_name}}/g, "p_" + i + "_" + k);
 					style_ele_left = artLayers[k].bounds[0].as('px');
 					style_ele_top = artLayers[k].bounds[1].as('px');
 					style_ele_width = artLayers[k].bounds[2].as('px') - style_ele_left;
-					style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_width}}/g, style_ele_width / rootsize + "rem")
-					style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_left}}/g, style_ele_left / rootsize + "rem")
-					style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_top}}/g, style_ele_top / rootsize + "rem")
+					style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_width}}/g, style_ele_width + "px")
+					style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_left}}/g, style_ele_left + "px")
+					style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_top}}/g, style_ele_top + "px")
 					style_content_main += style_ele_block_temp;
 					saveLayer(artLayers[k], "p_" + i + "_" + k, "")
 				} else if(artLayers[k].typename == "LayerSet") {
@@ -133,21 +153,40 @@
 	}
 
 	function buildGroup(layers, parentClass) {
-		var group_html = "<div>\n";
+		var group_html = "<div class='" + parentClass + "'>\n";
 		for(var i = layers.length - 1; i >= 0; i--) {
 			if(layers[i].typename == "LayerSet") {
 				group_html += buildGroup(layers[i].layers, parentClass + "_" + i);
+			} else if(layers[i].kind === LayerKind.TEXT) {
+				var text_item = layers[i].textItem;
+				var text_temp = index_text_template.replace(/{{index_text_class}}/g, parentClass + "_" + i);
+				text_temp = text_temp.replace(/{{index_text_contents}}/g, text_item.contents.replace(/\r/g, "</p><p>"));
+				group_html += text_temp;
+				var style_text_block_temp = style_text_block.replace(/{{style_text_name}}/g, parentClass + "_" + i);
+				style_text_left = layers[i].bounds[0].as('px');
+				style_text_top = layers[i].bounds[1].as('px');
+				style_text_width = layers[i].bounds[2].as('px') - style_text_left;
+				style_text_height = layers[i].bounds[3].as('px') - style_text_top;
+				style_text_block_temp = style_text_block_temp.replace(/{{style_text_width}}/g, style_text_width + "px");
+				style_text_block_temp = style_text_block_temp.replace(/{{style_text_height}}/g, style_text_height + "px");
+				style_text_block_temp = style_text_block_temp.replace(/{{style_text_left}}/g, style_text_left + "px");
+				style_text_block_temp = style_text_block_temp.replace(/{{style_text_top}}/g, style_text_top + "px");
+				style_text_block_temp = style_text_block_temp.replace(/{{style_text_fontsize}}/g, text_item.size.as('px') + "px");
+				style_text_block_temp = style_text_block_temp.replace(/{{style_text_lineheight}}/g, text_item.leading.as('px') + "px");
+				style_text_block_temp = style_text_block_temp.replace(/{{style_text_textindent}}/g, text_item.firstLineIndent.as('px') + "px");
+				style_text_block_temp = style_text_block_temp.replace(/{{style_text_color}}/g, text_item.color.rgb);
+				style_content_main += style_text_block_temp;
 			} else {
 				var img_temp = index_img_template.replace(/{{index_img_class}}/g, parentClass + "_" + i);
 				img_temp = img_temp.replace(/{{index_img_name}}/g, parentClass + "_" + i);
 				group_html += img_temp;
-				var style_ele_block_temp = style_ele_block.replace(/{{style_ele_name}}/g, parentClass + "_" + i)
+				var style_ele_block_temp = style_ele_block.replace(/{{style_ele_name}}/g, parentClass + "_" + i);
 				style_ele_left = layers[i].bounds[0].as('px');
 				style_ele_top = layers[i].bounds[1].as('px');
 				style_ele_width = layers[i].bounds[2].as('px') - style_ele_left;
-				style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_width}}/g, style_ele_width / rootsize + "rem")
-				style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_left}}/g, style_ele_left / rootsize + "rem")
-				style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_top}}/g, style_ele_top / rootsize + "rem")
+				style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_width}}/g, style_ele_width + "px");
+				style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_left}}/g, style_ele_left + "px");
+				style_ele_block_temp = style_ele_block_temp.replace(/{{style_ele_top}}/g, style_ele_top + "px");
 				style_content_main += style_ele_block_temp;
 				saveLayer(layers[i], parentClass + "_" + i, "")
 			}
@@ -155,6 +194,8 @@
 		group_html += "</div>\n";
 		return group_html;
 	}
+	
+	
 
 	function saveLayer(layer, name, savetype) {
 		var bounds = layer.bounds;

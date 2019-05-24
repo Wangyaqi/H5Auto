@@ -76,10 +76,10 @@ button {
 }
 
 .page_transition {
-	transition: transform 0.4s ease;
-	-ms-transition: transform 0.4s ease;
-	-moz-transition: transform 0.4s ease;
-	-webkit-transition: transform 0.4s ease;
+	transition: transform 0.45s ease;
+	-ms-transition: transform 0.45s ease;
+	-moz-transition: transform 0.45s ease;
+	-webkit-transition: transform 0.45s ease;
 }
 
 .page_box {
@@ -89,6 +89,14 @@ button {
 	left: 0;
 	top: 0;
 }
+
+.page_box.fill{
+	height: 100%;
+}
+
+.page_box.cover{}
+
+.page_box.contain{}
 
 .scrollview {
 	position: absolute;
@@ -134,9 +142,9 @@ button {
 
 .page_down {
 	position: absolute;
-	width: 8%;
+	width: 4%;
 	height: auto;
-	left: 46%;
+	left: 48%;
 	bottom: 3%;
 	opacity: 0;
 }
@@ -152,13 +160,28 @@ button {
 	display: block;
 }
 
+.loader_spin{
+	position: absolute;
+	width: 140px;
+	height: auto;
+	top: 50%;
+	left: 0;
+	right: 0;
+	margin: -70px auto auto auto;
+	animation: shunshi 2s 0s linear infinite;
+	-webkit-animation: shunshi 2s 0s linear infinite;
+}
+
 .loader_text {
 	position: absolute;
 	width: 100%;
-	height: auto;
+	height: 140px;
 	left: 0%;
-	top: 48%;
+	top: 50%;
 	text-align: center;
-	font-size: 24px;
+	line-height: 140px;
+	font-size: 36px;
+	color: white;
+	margin-top: -70px;
 }
 {{style_content_main}}
