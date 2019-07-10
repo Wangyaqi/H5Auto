@@ -14,6 +14,20 @@
 	var template = new Folder(templatepath);
 	copyFiles(template, outputpath, '');
 
+	var merge_layer = false;
+	if(confirm("是否需要自动处理图层？（如果您已经手动对所有非文字图层栅格化图层样式请选择取消/否）", "提示")) {
+		merge_layer = true;
+	}
+
+	var text_layer_fail_tips = false;
+
+	function text_fail() {
+		if(!text_layer_fail_tips) {
+			text_layer_fail_tips = true;
+			alert("您当前版本的PS无法处理部分文字样式，文字内容已正常输出到页面，请检查");
+		}
+	}
+
 	//script.js模版处理
 	var scriptfile = new File(outputpath + "/js/script.js");
 	var scriptread = "";
@@ -141,14 +155,31 @@
 				style_text_block_temp = style_text_block_temp.replace(/{{style_text_height}}/g, style_text_height + "px");
 				style_text_block_temp = style_text_block_temp.replace(/{{style_text_left}}/g, style_text_left + "px");
 				style_text_block_temp = style_text_block_temp.replace(/{{style_text_top}}/g, style_text_top + "px");
-				style_text_block_temp = style_text_block_temp.replace(/{{style_text_fontsize}}/g, text_item.size.as('px').toFixed(0) + "px");
-				style_text_block_temp = style_text_block_temp.replace(/{{style_text_lineheight}}/g, text_item.leading.as('px').toFixed(0) + "px");
+
+				try {
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_fontsize}}/g, text_item.size.as('px').toFixed(0) + "px");
+				} catch(e) {
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_fontsize}}/g, "inherit");
+					text_fail();
+				}
+				try {
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_lineheight}}/g, text_item.leading.as('px').toFixed(0) + "px");
+				} catch(e) {
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_lineheight}}/g, "inherit");
+					text_fail();
+				}
 				try {
 					style_text_block_temp = style_text_block_temp.replace(/{{style_text_textindent}}/g, text_item.firstLineIndent.as('px') + "px");
 				} catch(e) {
-					style_text_block_temp = style_text_block_temp.replace(/{{style_text_textindent}}/g, 0 + "px");
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_textindent}}/g, "inherit");
+					text_fail();
 				}
-				style_text_block_temp = style_text_block_temp.replace(/{{style_text_color}}/g, "#" + text_item.color.rgb.hexValue);
+				try {
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_color}}/g, "#" + text_item.color.rgb.hexValue);
+				} catch(e) {
+					style_text_block_temp = style_text_block_temp.replace(/{{style_text_color}}/g, "inherit");
+					text_fail();
+				}
 				style_content_main += style_text_block_temp;
 			} else {
 				var img_temp = index_img_template.replace(/{{index_img_class}}/g, parentClass + "_" + i);
@@ -187,9 +218,11 @@
 		} else {
 			doc.activeLayer = layer;
 			//layer.rasterize(RasterizeType.ENTIRELAYER);
-			var empty_layer = layer.parent.artLayers.add();
-			empty_layer.move(layer, ElementPlacement.PLACEAFTER);
-			layer.merge();
+			if(merge_layer) {
+				var empty_layer = layer.parent.artLayers.add();
+				empty_layer.move(layer, ElementPlacement.PLACEAFTER);
+				layer.merge();
+			}
 			var width = bounds[2].as('px') - bounds[0].as('px');
 			var height = bounds[3].as('px') - bounds[1].as('px');
 			var region = [
