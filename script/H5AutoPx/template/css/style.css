@@ -18,12 +18,15 @@ button {
 }
 
 body {
+	position: absolute;
 	-webkit-text-size-adjust: 100%;
 	color: #333333;
 	margin: 0;
 	padding: 0;
 	height: 100%;
 	width: 100%;
+	left: 0;
+	top: 0;
 	overflow-x: hidden;
 	font-family: PingFangSC-Regular, Helvetica, "Droid Sans", Arial, sans-serif;
 }

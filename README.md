@@ -17,7 +17,19 @@
 
 ## H5模版注意事项
 * div.page_box有fill,contain,cover三个大小可以选择，添加对应的类名即可
-* 可以使用$(".page_*").on("beforehide,beforeshow,afterhide,aftershow",function(){});处理页面显隐事件，比如:$(".page_1").on("beforeshow",function(){console.log("野生的page_1将要出现了");});$(".page_1").on("aftershow",function(){console.log("野生的page_1已经出现了");});
+* 可以使用
+```
+$(".page_*").on("beforehide,beforeshow,afterhide,aftershow",function(){});
+```
+处理页面显隐事件，比如:
+```
+$(".page_1").on("beforeshow",function(){
+	console.log("野生的page_1将要出现了");
+});
+$(".page_1").on("aftershow",function(){
+	console.log("野生的page_1已经出现了");
+});
+```
 * script.js 很短写的也很简单，修改起来也很方便
 * 本模版是我图省事随便弄的仅作参考，可以修改出一份适合你自己的来使用
 
