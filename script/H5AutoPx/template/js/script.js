@@ -15,10 +15,16 @@ function page_init() {
 		"height": d_height + "px",
 		"top": (w_height - d_height) / 2 + "px"
 	});
-	$(".page_box.fill").css({
-		"width": w_width + "px",
-		"height": w_height + "px",
+	$(".page_box.top").css({
+		"width": d_width + "px",
+		"height": d_height + "px",
 		"top": "0px"
+	});
+	$(".page_box.bottom").css({
+		"width": d_width + "px",
+		"height": d_height + "px",
+		"top": "auto",
+		"bottom": "0px"
 	});
 	$(".page_box.contain").css({
 		"transform-style": "preserve-3d",
