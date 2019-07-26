@@ -45,8 +45,7 @@
 	scriptfile.close();
 
 	//index.html模版处理
-	var index_page_template = '<div class="page {{index_page_no}}" id="{{index_page_no}}">\n<div class="page_box">\n{{index_page_main}}</div>\n{{index_page_down}}</div>';
-	var index_page_down = '<img class="page_down" src="img/down.png" />\n';
+	var index_page_template = '<div class="page {{index_page_no}}" id="{{index_page_no}}">\n<div class="page_box">\n{{index_page_main}}</div>\n</div>';
 	var index_img_template = '<img class="{{index_img_class}}" src="img/{{index_img_name}}.png" />\n';
 	var index_text_template = '<div class="{{index_text_class}}"><p>{{index_text_contents}}</p></div>';
 	var img_group_template = '<div>{{img}}</div>';
@@ -125,13 +124,8 @@
 
 		}
 		group_html += buildGroup(layers, "p_" + i);
-		var down_temp = "";
-		if(page_index < page_length) {
-			down_temp = index_page_down;
-		}
 		var index_page_no = "page_" + i;
 		var index_page_temp = index_page_template.replace(/{{index_page_no}}/g, index_page_no);
-		index_page_temp = index_page_temp.replace(/{{index_page_down}}/g, down_temp);
 		index_page_temp = index_page_temp.replace(/{{index_page_main}}/g, group_html);
 		page_main_content += index_page_temp;
 	}
