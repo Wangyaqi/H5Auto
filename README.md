@@ -24,10 +24,10 @@ $(".page_*").on("beforehide,beforeshow,afterhide,aftershow",function(){});
 处理页面显隐事件，比如:
 ```
 $(".page_1").on("beforeshow",function(){
-	console.log("野生的page_1将要出现了");
+	console.log("野生的page_1将要出现了"); 
 });
 $(".page_1").on("aftershow",function(){
-	console.log("野生的page_1已经出现了");
+	console.log("野生的page_1已经出现了"); 
 });
 ```
 * script.js 很短写的也很简单，修改起来也很方便

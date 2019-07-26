@@ -1,6 +1,6 @@
 var current_page = $(".page_0");
-var d_width = {{script_d_width}},
-	d_height = {{script_d_height}},
+var d_width = {{d_width}},
+	d_height = {{d_height}},
 	loaded = 0,
 	w_width=0,
 	w_height=0;

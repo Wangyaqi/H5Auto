@@ -37,8 +37,8 @@
 	scriptfile.close();
 	var script_d_width = doc.width.as('px');
 	var script_d_height = doc.height.as('px');
-	scriptread = scriptread.replace(/{{script_d_width}}/g, script_d_width.toString());
-	scriptread = scriptread.replace(/{{script_d_height}}/g, script_d_height.toString());
+	scriptread = scriptread.replace(/{{d_width}}/g, script_d_width.toString());
+	scriptread = scriptread.replace(/{{d_height}}/g, script_d_height.toString());
 	scriptfile.open("w");
 	scriptfile.encoding = 'utf-8';
 	scriptfile.write(scriptread);
@@ -71,9 +71,9 @@
 	htmlfile.encoding = 'utf-8';
 	htmlread = htmlfile.read();
 	htmlfile.close();
-	htmlread = htmlread.replace(/{{page_width}}/g, script_d_width);
-	htmlread = htmlread.replace(/{{page_title}}/g, docname);
-	htmlread = htmlread.replace(/{{page_main_content}}/g, page_main_content);
+	htmlread = htmlread.replace(/{{d_width}}/g, script_d_width);
+	htmlread = htmlread.replace(/{{title}}/g, docname);
+	htmlread = htmlread.replace(/{{html_main}}/g, page_main_content);
 	htmlfile.open("w");
 	htmlfile.encoding = 'utf-8';
 	htmlfile.write(htmlread);
@@ -86,10 +86,10 @@
 	cssfile.encoding = 'utf-8';
 	cssread = cssfile.read();
 	cssfile.close();
-	cssread = cssread.replace(/{{style_page_bg}}/g, style_page_bg);
-	cssread = cssread.replace(/{{style_page_width}}/g, script_d_width);
-	cssread = cssread.replace(/{{style_page_halfwidth}}/g, script_d_width / 2);
-	cssread = cssread.replace(/{{style_content_main}}/g, style_content_main);
+	cssread = cssread.replace(/{{uni_bg}}/g, style_page_bg);
+	cssread = cssread.replace(/{{d_width}}/g, script_d_width);
+	cssread = cssread.replace(/{{d_width_half}}/g, script_d_width / 2);
+	cssread = cssread.replace(/{{css_main}}/g, style_content_main);
 	cssfile.open("w");
 	cssfile.encoding = 'utf-8';
 	cssfile.write(cssread);

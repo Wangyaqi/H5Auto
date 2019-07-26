@@ -59,11 +59,11 @@ button {
 
 .view {
 	position: absolute;
-	width: {{style_page_width}}px;
+	width: {{d_width}}px;
 	height: 100%;
 	overflow: hidden;
 	left: 50%;
-	margin-left: -{{style_page_halfwidth}}px;
+	margin-left: -{{d_width_half}}px;
 }
 
 .page {
@@ -74,7 +74,7 @@ button {
 	top: 0;
 	background-size: cover;
 	background-position: center;
-	{{style_page_bg}}
+	{{uni_bg}}
 	display: none;
 }
 
@@ -93,9 +93,9 @@ button {
 	top: 0;
 }
 
-.page_box.fill{
-	height: 100%;
-}
+.page_box.top{}
+
+.page_box.bottom{}
 
 .page_box.cover{}
 
@@ -161,15 +161,6 @@ button {
 	background-image: url(../img/music_close.png);
 }
 
-.page_down {
-	position: absolute;
-	width: 4%;
-	height: auto;
-	left: 48%;
-	bottom: 3%;
-	opacity: 0;
-}
-
 .page_0{
 	display: block;
 }
@@ -198,4 +189,4 @@ button {
 	color: white;
 	margin-top: -70px;
 }
-{{style_content_main}}
+{{css_main}}
