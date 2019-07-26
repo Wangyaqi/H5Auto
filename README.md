@@ -16,7 +16,7 @@
 * 选择H5Auto.jsx里有标注好html,css的模版可酌情修改
 
 ## H5模版注意事项
-* div.page_box有fill,contain,cover三个大小可以选择，添加对应的类名即可
+* div.page_box除默认之外有top,bottom,contain,cover四个大小位置可以选择，添加对应的类名即可
 * 可以使用
 ```
 $(".page_*").on("beforehide,beforeshow,afterhide,aftershow",function(){});
