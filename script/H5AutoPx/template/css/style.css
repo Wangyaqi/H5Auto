@@ -133,10 +133,28 @@ button {
 
 .music_play {
 	background-image: url(../img/music.png);
-	animation: shunshi 2s 0s linear infinite;
-	-ms-animation: shunshi 2s 0s linear infinite;
-	-moz-animation: shunshi 2s 0s linear infinite;
-	-webkit-animation: shunshi 2s 0s linear infinite;
+	animation: music_play 2s 0s linear infinite;
+	-ms-animation: music_play 2s 0s linear infinite;
+	-moz-animation: music_play 2s 0s linear infinite;
+	-webkit-animation: music_play 2s 0s linear infinite;
+}
+
+@keyframes music_play {
+	from{
+		transform: rotate(0deg);
+	}
+	to{
+		transform: rotate(360deg);
+	}
+}
+
+@-webkit-keyframes music_play {
+	from{
+		-webkit-transform: rotate(0deg);
+	}
+	to{
+		-webkit-transform: rotate(360deg);
+	}
 }
 
 .music_pause {
@@ -150,13 +168,6 @@ button {
 	left: 48%;
 	bottom: 3%;
 	opacity: 0;
-}
-
-.page_down {
-	animation: fadeIn 0.5s 1.5s ease forwards, ufo 1.5s 0s ease infinite alternate;
-	-ms-animation: fadeIn 0.5s 1.5s ease forwards, ufo 1.5s 0s ease infinite alternate;
-	-moz-animation: fadeIn 0.5s 1.5s ease forwards, ufo 1.5s 0s ease infinite alternate;
-	-webkit-animation: fadeIn 0.5s 1.5s ease forwards, ufo 1.5s 0s ease infinite alternate;
 }
 
 .page_0{
