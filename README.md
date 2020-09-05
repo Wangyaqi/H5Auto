@@ -19,14 +19,14 @@
 * div.page_box除默认之外有top,bottom,contain,cover四个大小位置可以选择，添加对应的类名即可
 * 可以使用
 ```
-$(".page_*").on("beforehide,beforeshow,afterhide,aftershow",function(){});
+$(".page_*").on("beforeHide,beforeShow,afterHide,afterShow",function(){});
 ```
 处理页面显隐事件，比如:
 ```
-$(".page_1").on("beforeshow",function(){
+$(".page_1").on("beforeShow",function(){
 	console.log("野生的page_1将要出现了"); 
 });
-$(".page_1").on("aftershow",function(){
+$(".page_1").on("afterShow",function(){
 	console.log("野生的page_1已经出现了"); 
 });
 ```
