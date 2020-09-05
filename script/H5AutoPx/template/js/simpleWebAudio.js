@@ -67,7 +67,7 @@ simpleWebAudio.prototype = {
 				self.source.start(0);
 			}
 		} else {
-			var load_play = setTimeout(function() {
+			var loadPlay = setTimeout(function() {
 				self.play();
 			}, 50);
 		}

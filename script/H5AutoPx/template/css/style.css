@@ -59,11 +59,11 @@ button {
 
 .view {
 	position: absolute;
-	width: {{d_width}}px;
+	width: {{dWidth}}px;
 	height: 100%;
 	overflow: hidden;
 	left: 50%;
-	margin-left: -{{d_width_half}}px;
+	margin-left: -{{dWidthHalf}}px;
 }
 
 .page {
@@ -74,7 +74,7 @@ button {
 	top: 0;
 	background-size: cover;
 	background-position: center;
-	{{uni_bg}}
+	{{uniBg}}
 	display: none;
 }
 
@@ -189,4 +189,4 @@ button {
 	color: white;
 	margin-top: -70px;
 }
-{{css_main}}
+{{cssMain}}
